@@ -67,8 +67,24 @@ function move(gameState) {
   }
 
   // TODO: Step 1 - Prevent your Battlesnake from moving out of bounds
-  // boardWidth = gameState.board.width;
-  // boardHeight = gameState.board.height;
+  const boardWidth = gameState.board.width;
+  const boardHeight = gameState.board.height;
+
+  if (myHead.x == 0){  // Head is at the left edge
+    isMoveSafe.left = false;
+  }
+
+  if (myHead.x == (boardWidth - 1)) {  // Head is at the right edge
+    isMoveSafe.right = false;
+  }
+
+  if (myHead.y == 0){  // Head is at the bottom edge
+    isMoveSafe.down = false;
+  }
+
+  if (myHead.y == (boardHeight - 1)){  // Head is at the top edge
+    isMoveSafe.up = false;
+  }
 
   // TODO: Step 2 - Prevent your Battlesnake from colliding with itself
   // myBody = gameState.you.body;
@@ -89,7 +105,8 @@ function move(gameState) {
   // TODO: Step 4 - Move towards food instead of random, to regain health and survive longer
   // food = gameState.board.food;
 
-  console.log(`MOVE ${gameState.turn}: ${nextMove}`)
+  console.log(`MOVE ${gameState.turn}: ${nextMove}`);
+  console.log(gameState);
   return { move: nextMove };
 }
 
