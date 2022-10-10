@@ -22,8 +22,8 @@ function info() {
     apiversion: "1",
     author: "robinleaver",
     color: "#888888", // TODO: Choose color
-    head: "beluga",  // TODO: Choose head
-    tail: "do-sammy",  // TODO: Choose tail
+    head: "beluga", 
+    tail: "do-sammy", 
   };
 }
 
