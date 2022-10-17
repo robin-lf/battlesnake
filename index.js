@@ -21,11 +21,12 @@ function info() {
   return {
     apiversion: "1",
     author: "robinleaver",
-    color: "#888888", // TODO: Choose color
+    color: "#57b3cf",
     head: "beluga", 
     tail: "do-sammy", 
   };
 }
+
 
 // start is called when your Battlesnake begins a game
 function start(gameState) {
@@ -35,6 +36,18 @@ function start(gameState) {
 // end is called when your Battlesnake finishes a game
 function end(gameState) {
   console.log("GAME OVER\n");
+}
+
+// return the coordinates of an adjacent tile (to head)
+function getAdjacentTiles(head){
+  let adjacentTiles = {
+    left: {"x":(head.x - 1), "y":head.y},
+    right: {"x":(head.x + 1), "y":head.y},
+    up: {"x":head.x, "y":(head.y + 1)},
+    down: {"x":head.x, "y":(head.y - 1)}
+  };
+
+  return adjacentTiles;
 }
 
 // move is called on every turn and returns your next move
@@ -51,22 +64,28 @@ function move(gameState) {
 
   // We've included code to prevent your Battlesnake from moving backwards
   const myHead = gameState.you.body[0];
-  const myNeck = gameState.you.body[1];
+  const myBody = gameState.you.body;
 
-  if (myNeck.x < myHead.x) {        // Neck is left of head, don't move left
+  const adjacentTiles = getAdjacentTiles(myHead);
+  console.log(myHead);
+  console.log(adjacentTiles);
+
+  // Prevent Battlesnake from colliding with itself
+  if (myBody.find(element => element.x == adjacentTiles.left.x && element.y == adjacentTiles.left.y)) {        // Body is left of head, don't move left
     isMoveSafe.left = false;
-
-  } else if (myNeck.x > myHead.x) { // Neck is right of head, don't move right
+  }
+  if (myBody.find(element => element.x == adjacentTiles.right.x && element.y == adjacentTiles.right.y)) { // Body is right of head, don't move right
     isMoveSafe.right = false;
-
-  } else if (myNeck.y < myHead.y) { // Neck is below head, don't move down
+  }
+  if (myBody.find(element => element.x == adjacentTiles.down.x && element.y == adjacentTiles.down.y)) { // Body is below head, don't move down
     isMoveSafe.down = false;
-
-  } else if (myNeck.y > myHead.y) { // Neck is above head, don't move up
+  } 
+  if (myBody.find(element => element.x == adjacentTiles.up.x && element.y == adjacentTiles.up.y)) { // Body is above head, don't move up
     isMoveSafe.up = false;
   }
 
-  // TODO: Step 1 - Prevent your Battlesnake from moving out of bounds
+  console.log(isMoveSafe);
+  // Prevent Battlesnake from moving out of bounds
   const boardWidth = gameState.board.width;
   const boardHeight = gameState.board.height;
 
@@ -106,7 +125,7 @@ function move(gameState) {
   // food = gameState.board.food;
 
   console.log(`MOVE ${gameState.turn}: ${nextMove}`);
-  console.log(gameState);
+  // console.log(gameState);
   return { move: nextMove };
 }
 
