@@ -62,27 +62,30 @@ function move(gameState) {
     right: true
   };
 
-  // We've included code to prevent your Battlesnake from moving backwards
+   // Prevent Battlesnake from colliding with itself and other snakes
   const myHead = gameState.you.body[0];
   const myBody = gameState.you.body;
-
+  const snakes = gameState.board.snakes;
   const adjacentTiles = getAdjacentTiles(myHead);
-  console.log(myHead);
   console.log(adjacentTiles);
 
-  // Prevent Battlesnake from colliding with itself
-  if (myBody.find(element => element.x == adjacentTiles.left.x && element.y == adjacentTiles.left.y)) {        // Body is left of head, don't move left
-    isMoveSafe.left = false;
+  // Check for any snakes including you in adjacent tiles
+  function checkForSnakes(snake) {
+    if (snake.body.find(element => element.x == adjacentTiles.left.x && element.y == adjacentTiles.left.y)) {        // Body is left of head, don't move left
+      isMoveSafe.left = false;
+    }
+    if (snake.body.find(element => element.x == adjacentTiles.right.x && element.y == adjacentTiles.right.y)) { // Body is right of head, don't move right
+      isMoveSafe.right = false;
+    }
+    if (snake.body.find(element => element.x == adjacentTiles.down.x && element.y == adjacentTiles.down.y)) { // Body is below head, don't move down
+      isMoveSafe.down = false;
+    } 
+    if (snake.body.find(element => element.x == adjacentTiles.up.x && element.y == adjacentTiles.up.y)) { // Body is above head, don't move up
+      isMoveSafe.up = false;
+    }
   }
-  if (myBody.find(element => element.x == adjacentTiles.right.x && element.y == adjacentTiles.right.y)) { // Body is right of head, don't move right
-    isMoveSafe.right = false;
-  }
-  if (myBody.find(element => element.x == adjacentTiles.down.x && element.y == adjacentTiles.down.y)) { // Body is below head, don't move down
-    isMoveSafe.down = false;
-  } 
-  if (myBody.find(element => element.x == adjacentTiles.up.x && element.y == adjacentTiles.up.y)) { // Body is above head, don't move up
-    isMoveSafe.up = false;
-  }
+  
+  snakes.forEach(checkForSnakes);
 
   console.log(isMoveSafe);
   // Prevent Battlesnake from moving out of bounds
