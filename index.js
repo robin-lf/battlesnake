@@ -138,3 +138,8 @@ runServer({
   move: move,
   end: end
 });
+
+
+// Find Food
+// Get array of directions needed to move in to get to food (difference between x and y coordinates should only ever one or two)
+// Choose a direction from array that is safe
