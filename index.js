@@ -108,14 +108,17 @@ function move(gameState) {
     isMoveSafe.up = false;
   }
 
-  // TODO: Step 2 - Prevent your Battlesnake from colliding with itself
-  // myBody = gameState.you.body;
+  // Look for food
+  let directionsToFood = lookForFood(gameState.board.food, myHead);
+  console.log(directionsToFood);
+  // Check if directions to food are safe
+  let safeMoves = directionsToFood.filter(key => isMoveSafe[key]);
 
-  // TODO: Step 3 - Prevent your Battlesnake from colliding with other Battlesnakes
-  // opponents = gameState.board.snakes;
-
-  // Are there any safe moves left?
-  const safeMoves = Object.keys(isMoveSafe).filter(key => isMoveSafe[key]);
+  // If not get any other safe moves
+  if(safeMoves.length == 0){
+    safeMoves = Object.keys(isMoveSafe).filter(key => isMoveSafe[key]);
+  }
+  // If there are still no safe moves, move down
   if (safeMoves.length == 0) {
     console.log(`MOVE ${gameState.turn}: No safe moves detected! Moving down`);
     return { move: "down" };
@@ -139,7 +142,31 @@ runServer({
   end: end
 });
 
+function lookForFood(allFood, myHead) {
+  // Set first food as the closestFood
+  let closestFood = allFood[0];
+  let closestFoodDistance = (Math.abs(myHead.x - closestFood.x)) + (Math.abs(myHead.y - closestFood.y));
+  let directionsToFood = [];
+  // Loop and evaluate the distance of each other food in the array
+  allFood.forEach(function(food){
+    let distance = (Math.abs(myHead.x - food.x)) + (Math.abs(myHead.y - food.y));
+    if(closestFoodDistance > distance){
+      closestFood = food;
+      closestFoodDistance = distance;
+    }
+  });
+  // Get directions needed to get to food and return that array
+  if(myHead.x < closestFood.x){ //Food is to the right of the head
+    directionsToFood.push('right');
+  } else { //Food is to the left of the head
+    directionsToFood.push('left');
+  }
 
-// Find Food
-// Get array of directions needed to move in to get to food (difference between x and y coordinates should only ever one or two)
-// Choose a direction from array that is safe
+  if(myHead.y < closestFood.y){ //Food is above the head
+    directionsToFood.push('up');
+  } else { //Food is below the head
+    directionsToFood.push('down');
+  }
+
+  return directionsToFood;
+}
