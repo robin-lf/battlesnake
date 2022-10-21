@@ -108,16 +108,24 @@ function move(gameState) {
     isMoveSafe.up = false;
   }
 
-  // Look for food
-  let directionsToFood = lookForFood(gameState.board.food, myHead);
-  console.log(directionsToFood);
-  // Check if directions to food are safe
-  let safeMoves = directionsToFood.filter(key => isMoveSafe[key]);
-
-  // If not get any other safe moves
-  if(safeMoves.length == 0){
+  let safeMoves = [];
+  console.log(gameState.board.food.length);
+  if(gameState.board.food.length > 0){
+    // Look for food
+    let directionsToFood = lookForFood(gameState.board.food, myHead);
+    console.log(directionsToFood);
+    // Check if directions to food are safe
+    safeMoves = directionsToFood.filter(key => isMoveSafe[key]);
+    console.log(safeMoves);
+    // If not get any other safe moves
+    if(safeMoves.length == 0){
+      safeMoves = Object.keys(isMoveSafe).filter(key => isMoveSafe[key]);
+    }
+  } else {
+    //Check for safe moves
     safeMoves = Object.keys(isMoveSafe).filter(key => isMoveSafe[key]);
   }
+  
   // If there are still no safe moves, move down
   if (safeMoves.length == 0) {
     console.log(`MOVE ${gameState.turn}: No safe moves detected! Moving down`);
